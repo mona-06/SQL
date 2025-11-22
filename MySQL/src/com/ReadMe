@@ -1,0 +1,86 @@
+Database Management System
+
+ 	TO store and retrieve the Stored Data
+Data(Collection of information)
+
+MySQL: Structured Query Language
+ 	DDL - Data Definition Language(Create ,Alter, Drop)
+ 	DML - Data Manipulation Language(Select, Insert
+ 	DCL - Data Control Language(Grant---permission)
+ 	TCL - Transaction Control language(Commit, Rollback)
+
+CREATE database payroll;
+use payroll;
+CREATE table employees(id INT, name VARCHAR(50), dept VARCHAR(100), salary DOUBLE);
+desc employees;
+ALTER table employees ADD COLUMN email VARCHAR(100);
+desc employees;
+ALTER table employees RENAME COLUMN dept to department;
+ALTER table employees MODIFY salary INT;(datatype change)
+ALTER table employees RENAME to employee;(table rename)
+desc employees;
+desc employee;
+ALTER table employee DROP COLUMN email;(delete column)
+DROP table employee;(delete a table)
+DROP database payroll;(delete a database)
+
+
+WORKBENCH
+After creating the employee table and inserting the values
+select * from employees;
+UPDATE employee SET salary =12500 WHERE id=101;
+DELETE from employees WHERE id=103;
+select * from employees;
+TRUNCATE employee; (data only get removed does not affect the structure of the table)
+select * from employees;
+
+LOCAL HOST(client and host in same)
+select user,host from  mysql(database).user;
+(or)
+select * from mysql.user;(all)
+
+CREATE user 'trainee'@'localhost' IDENTIFIED BY 'Password@123';
+select user,host from  mysql.user;
+To GRANT permissions the operations
+GRANT select,insert on payroll .* TO 'trainee'@'localhost';
+FLUSH PRIVILEGES;
+REVOKE select,insert ON payroll,*from 'trainee'@'localhost';
+FLUSH PRIVILEGES;
+OPEN cmd prompt
+select the bin path directory
+mysql -u trainee -p
+enter pass ;
+use payroll;
+select and insert can be done
+revoke in the main client cmd
+
+create a new table accounts;
+insert values
+update accounts set balance=balance-50 where id=1;
+
+TO START TRANSACTION
+BEGIN;
+or
+START TRANSACTION;
+UPDATE accounts SET balance=balance-50 WHERE id=1;
+mistake: instead of id=2 i updated in id=1 so i need to go back to the previous transaction
+ROLLBACK;
+corrected the transaction
+UPDATE accounts SET balance=balance-50 WHERE id=2;
+COMMIT;
+after commit the rollback wont work
+ROLLBACK;
+
+BEGIN;
+SAVEPOINT mark1;
+update accounts set name='Akhila' where id=1;
+
+SAVEPOINT mark2;
+update accounts set balance=13000 where balance=45000;
+
+SAVEPOINT mark3;
+
+update accounts set balance=balance+5000 where id=2;
+
+
+ROLLBACK to mark2;(undo the changes after the savepoint mark2)
